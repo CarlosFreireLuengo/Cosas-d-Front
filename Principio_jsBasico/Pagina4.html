@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form name="formulario1">
+        <select name="lista1">
+            <option value="">Primero</option>
+            <option value="Primero">Primer</option>
+            <option value="Segundo">Segun</option>
+            <option value="Tercero">Tercer</option>
+            <option value="Cuarto">Cuarto</option>
+        </select>
+        <br>
+        <input type="button" value="Mostrar" onclick="mostrar()">
+        <input type="button" value="Nuevo" onclick="crearNuevo()">
+        <input type="button" value="Borrar" onclick="borrarSeleccionado()">
+        <br>
+        <input type="text" id="salida" readonly placeholder="Aquí esta la solucion">
+    </form>
+</body>
+</html>
+
+<script src="funciones.js"></script>

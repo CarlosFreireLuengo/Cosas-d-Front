@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Pizza con POO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 200px;
+            display: block;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .pedido-item {
+            display: flex;
+            justify-content: space-between;
+            width: 400px;
+        }
+
+        .eliminar {
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pedidos de pizza</h1>
+    <form id="frmPedido">
+        <label for="pizza">Selecciona la pizza:</label>
+        <select id="pizza">
+            <option value="4">Queso</option>
+            <option value="6">Jamón y Queso</option>
+            <option value="10">Especial</option>
+        </select>
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" min="1" value="1">
+
+        <button type="submit">Añadir pedido</button>
+    </form>
+
+    <h2>Lista de Pedidos</h2>
+    <ul id="listaPedidos"></ul>
+    <h3>Total acumulado: $<span id="totalAcumulado">0.00</span></h3>
+
+    <script>
+        // ---------- Clases ----------
+        class Pedido {
+            constructor(nombre, precioUnitario, cantidad) {
+                this.nombre = nombre;
+                this.precioUnitario = precioUnitario;
+                this.cantidad = cantidad;
+                this.total = this.precioUnitario * this.cantidad;
+            }
+        }
+
+        class Gestor_Pedidos {
+            constructor(listaElement, totalElement) {
+                this.listaPedidos = [];
+                this.listaElement = listaElement;
+                this.totalElement = totalElement;
+                this.totalAcumulado = 0;
+            }
+
+            añadirPedido(pedido) {
+                this.listaPedidos.push(pedido);
+                this.calcularTotal();
+                this.mostrarPedidos();
+            }
+
+            eliminarPedido(index) {
+                this.listaPedidos.splice(index, 1);
+                this.calcularTotal();
+                this.mostrarPedidos();
+            }
+
+            calcularTotal() {
+                this.totalAcumulado = this.listaPedidos.reduce((acum, p) => acum + p.total, 0);
+                this.totalElement.textContent = this.totalAcumulado.toFixed(2);
+            }
+
+            mostrarPedidos() {
+                this.listaElement.innerHTML = this.listaPedidos.map((p, index) =>
+                    `<li class="pedido-item">
+                        <span>${p.cantidad} x ${p.nombre} = $${p.total.toFixed(2)}</span>
+                        <span class="eliminar" data-index="${index}">[Eliminar]</span>
+                    </li>`
+                ).join('');
+
+                this.listaElement.querySelectorAll('.eliminar').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const idx = parseInt(btn.getAttribute('data-index'));
+                        this.eliminarPedido(idx);
+                    });
+                });
+            }
+        }
+
+        // ---------- Elementos del DOM ----------
+        const frmPedido = document.querySelector('#frmPedido');
+        const pizza = document.querySelector('#pizza');
+        const inputCantidad = document.querySelector('#cantidad');
+        const listaPedidos = document.querySelector('#listaPedidos');
+        const totalElement = document.querySelector('#totalAcumulado');
+
+        const gestor = new Gestor_Pedidos(listaPedidos, totalElement);
+
+        // ---------- Eventos ----------
+        frmPedido.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const nombre = pizza.options[pizza.selectedIndex].text;
+            const precio = parseFloat(pizza.value);
+            const cantidad = parseInt(inputCantidad.value);
+
+            const nuevoPedido = new Pedido(nombre, precio, cantidad);
+            gestor.añadirPedido(nuevoPedido);
+
+            frmPedido.reset();
+            inputCantidad.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termostato</title>
+    <style>
+       body {
+           font-family: Arial, sans-serif;
+           background-color: #f4f6f8;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           height: 100vh;
+           margin: 0;
+       }
+
+       .card {
+           background-color: #ffffff;
+           padding: 30px;
+           border-radius: 12px;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+           width: 320px;
+           text-align: center;
+       }
+
+       h2 {
+           margin-top: 0;
+           color: #333;
+       }
+
+       .display {
+           font-size: 2rem;
+           font-weight: bold;
+           color: #2c3e50;
+           background-color: #ecf0f1;
+           padding: 15px;
+           border-radius: 8px;
+           margin: 20px 0;
+       }
+
+       .controls {
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+       }
+
+       input[type="number"] {
+           padding: 10px;
+           font-size: 1rem;
+           border: 1px solid #ccc;
+           border-radius: 6px;
+           text-align: center;
+       }
+
+       button {
+           padding: 10px;
+           font-size: 1rem;
+           color: white;
+           background-color: #3498db;
+           border: none;
+           border-radius: 6px;
+           cursor: pointer;
+           transition: background-color 0.2s;
+       }
+
+       button:hover {
+           background-color: #2980b9;
+       }
+
+       .log {
+           margin-top: 15px;
+           font-size: 0.85rem;
+           min-height: 20px;
+           font-weight: bold;
+       }
+
+       .success {
+           color: #27ae60;
+       }
+
+       .error {
+           color: #c0392b;
+       }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Termostato</h2>
+        <div id="pantallaTemperatura" class="display"></div>
+        <div class="controls">
+            <input type="number" id="inputTemp" placeholder="Ej 20 o -300" step="any">
+            <button id="btnAplicar">Aplicar Temperatura</button>
+        </div>
+        <div id="mensaje-log" class="log"></div>
+    </div>
+
+    <script>
+        class Termostato {
+            constructor(celsiusInicial) {
+                this._celsius = celsiusInicial;
+            }
+
+            // GETTER: leer la temperatura formateada
+            get temperatura() {
+                return `${this._celsius} º C`;
+            }
+
+            // SETTER: valida y asigna la nueva temperatura
+            set temperatura(nuevoValor) {
+                if (nuevoValor === "" || isNaN(nuevoValor)) {
+                    throw new Error("Por favor, mete lo q tienes que meter (un número)");
+                }
+                if (nuevoValor < -273.15) {
+                    throw new Error(`${nuevoValor} está por debajo del cero absoluto, pringao`);
+                }
+                this._celsius = Number(nuevoValor);
+            }
+        }
+
+        const miTermostato = new Termostato(21);
+        const pantalla = document.querySelector("#pantallaTemperatura");
+        const input = document.querySelector("#inputTemp");
+        const boton = document.querySelector("#btnAplicar");
+        const log = document.querySelector("#mensaje-log");
+
+        function actualizarPantalla() {
+            pantalla.textContent = miTermostato.temperatura;
+        }
+
+        // Mostrar la temperatura inicial al cargar la página
+        actualizarPantalla();
+
+        boton.addEventListener('click', () => {
+            log.textContent = "";
+            log.className = "log";
+            try {
+                miTermostato.temperatura = input.value;
+
+                actualizarPantalla();
+                log.textContent = "Temperatura actualizada correctamente";
+                log.classList.add("success");
+            } catch (error) {
+                log.textContent = error.message;
+                log.classList.add("error");
+            }
+        });
+    </script>
+</body>
+</html>

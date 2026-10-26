@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido de pizzas</title>
+</head>
+<body>
+  <h1>Pedido de pizzas</h1>
+
+  <form>
+      <label>Pizza:</label>
+      <select id="pizza">
+        <option value="4">Queso:4€</option>
+        <option value="6">Jamón y queso:6€</option>
+        <option value="10">Especial:10€</option>
+      </select>
+
+      <br>
+      <label for="cantidad">Cantidad:</label>
+      <input type="text" id="cantidad">
+      <br>
+      <input type="button" value="Calcular precio" onclick="calcular()">
+
+      <br>
+
+      <label for="total">Importe a pagar:</label>
+      <input type="text" id="total" readonly>
+
+  </form>
+</body>
+</html>
+  <script src="fichero2.js">
+    
+  </script>
