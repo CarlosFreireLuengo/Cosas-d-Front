@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 1: Generador de Fichas de Personajes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Generador de Fichas de Personajes</h1>
+
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" placeholder="Ana">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="ana@correo.com">
+
+    <label for="rol">Rol (opcional)</label>
+    <select id="rol">
+        <option value="">-- Sin especificar (invitado) --</option>
+        <option value="admin">admin</option>
+        <option value="editor">editor</option>
+    </select>
+
+    <label for="idioma">Idioma (opcional)</label>
+    <select id="idioma">
+        <option value="">-- Sin especificar (es) --</option>
+        <option value="en">en</option>
+        <option value="fr">fr</option>
+    </select>
+
+    <button id="btnCrear">Crear ficha</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function crearPerfilUsuario(nombre, email, configuracion = {}) {
+            const { rol = "invitado", idioma = "es" } = configuracion;
+
+            return {
+                nombre,
+                email,
+                rol,
+                idioma,
+                obtenerResumen() {
+                    return `Nombre: ${this.nombre} | Email: ${this.email} | Rol: ${this.rol}`;
+                },
+            };
+        }
+
+        document.getElementById("btnCrear").addEventListener("click", () => {
+            const nombre = document.getElementById("nombre").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const rol = document.getElementById("rol").value;
+            const idioma = document.getElementById("idioma").value;
+
+            if (!nombre || !email) {
+                alert("Introduce nombre y email.");
+                return;
+            }
+
+            // Solo se añaden a la configuración los valores que el usuario eligió,
+            // para que los valores por defecto se apliquen al resto.
+            const configuracion = {};
+            if (rol) configuracion.rol = rol;
+            if (idioma) configuracion.idioma = idioma;
+
+            const usuario = crearPerfilUsuario(nombre, email, configuracion);
+
+            console.log(usuario.obtenerResumen());
+
+            const ficha = document.createElement("div");
+            ficha.className = "ficha";
+            ficha.innerHTML = `
+        <p><strong>Resumen:</strong> ${usuario.obtenerResumen()}</p>
+        <p><strong>Idioma:</strong> ${usuario.idioma}</p>
+      `;
+            document.getElementById("resultado").appendChild(ficha);
+        });
+    </script>
+</body>
+
+</html>
