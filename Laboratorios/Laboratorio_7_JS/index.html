@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 7: Buscador de Usuarios con Fetch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+
+        .error {
+            background: #fdecea;
+            color: #b71c1c;
+            border-color: #f5c6cb;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Buscador de Usuarios con Fetch</h1>
+
+    <label for="idUsuario">ID de usuario (1-10)</label>
+    <input type="number" id="idUsuario" min="1" placeholder="1">
+
+    <button id="btnBuscar">Buscar usuario</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarUsuario(id) {
+            try {
+                const respuesta = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+
+                // fetch no lanza error con un 404, hay que comprobarlo a mano
+                if (!respuesta.ok) {
+                    throw new Error(`El usuario ${id} no existe (código ${respuesta.status})`);
+                }
+
+                const datos = await respuesta.json();
+
+                // Devolvemos solo nombre, email y ciudad
+                return {
+                    nombre: datos.name,
+                    email: datos.email,
+                    ciudad: datos.address.city,
+                };
+            } catch (error) {
+                console.error("Error al buscar el usuario:", error.message);
+                return null;
+            }
+        }
+
+        function mostrarResultado(usuario) {
+            const resultado = document.getElementById("resultado");
+            resultado.innerHTML = "";
+
+            const ficha = document.createElement("div");
+            ficha.className = "ficha";
+
+            if (!usuario) {
+                ficha.classList.add("error");
+                ficha.textContent = "No se pudo obtener el usuario (no existe o hay un fallo de red).";
+            } else {
+                for (const [clave, valor] of Object.entries(usuario)) {
+                    const p = document.createElement("p");
+                    const negrita = document.createElement("strong");
+                    negrita.textContent = `${clave}: `;
+                    p.appendChild(negrita);
+                    p.appendChild(document.createTextNode(valor));
+                    ficha.appendChild(p);
+                }
+            }
+
+            resultado.appendChild(ficha);
+        }
+
+        document.getElementById("btnBuscar").addEventListener("click", async () => {
+            const id = document.getElementById("idUsuario").value.trim();
+
+            if (!id) {
+                alert("Introduce un ID.");
+                return;
+            }
+
+            const usuario = await buscarUsuario(id);
+            console.log(usuario);
+            mostrarResultado(usuario);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 2: Sistema de Fichaje de Empleados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+
+        .mensaje {
+            margin-top: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+        }
+
+        .error {
+            background: #fdecea;
+            color: #b71c1c;
+        }
+
+        .ok {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Sistema de Fichaje de Empleados</h1>
+
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" placeholder="Ana">
+
+    <label for="sueldoBase">Sueldo base (€)</label>
+    <input type="number" id="sueldoBase" placeholder="1200">
+
+    <button id="btnCrear">Crear empleado</button>
+
+    <div id="mensaje"></div>
+
+    <div id="panelEmpleado" class="ficha" hidden>
+        <p><strong>Empleado:</strong> <span id="verNombre"></span></p>
+        <p><strong>Sueldo actual:</strong> <span id="verSueldo"></span></p>
+
+        <label for="nuevoSueldo">Nuevo sueldo (€)</label>
+        <input type="number" id="nuevoSueldo" placeholder="1500">
+        <button id="btnCambiar">Cambiar sueldo</button>
+    </div>
+
+    <script>
+        const SUELDO_MINIMO = 1000;
+
+        function mostrarMensaje(texto, esError = false) {
+            const caja = document.getElementById("mensaje");
+            caja.className = "mensaje " + (esError ? "error" : "ok");
+            caja.textContent = texto;
+            if (esError) console.error(texto);
+        }
+
+        class Empleado {
+            #sueldo = SUELDO_MINIMO;
+
+            constructor(nombre, sueldoBase) {
+                this.nombre = nombre;
+                this.sueldo = sueldoBase; // pasa por el setter (validación)
+            }
+
+            // Getter: sueldo formateado con el símbolo de la moneda
+            get sueldo() {
+                return `${this.#sueldo} €`;
+            }
+
+            // Setter: rechaza sueldos negativos o inferiores al mínimo
+            set sueldo(valor) {
+                if (typeof valor !== "number" || Number.isNaN(valor) || valor < SUELDO_MINIMO) {
+                    mostrarMensaje(`Error: el sueldo debe ser un número igual o superior a ${SUELDO_MINIMO} €. No se ha modificado el sueldo actual.`, true);
+                    return;
+                }
+                this.#sueldo = valor;
+                mostrarMensaje(`Sueldo actualizado a ${valor} €.`);
+            }
+        }
+
+        let empleado = null;
+
+        function actualizarPanel() {
+            document.getElementById("verNombre").textContent = empleado.nombre;
+            document.getElementById("verSueldo").textContent = empleado.sueldo;
+        }
+
+        document.getElementById("btnCrear").addEventListener("click", () => {
+            const nombre = document.getElementById("nombre").value.trim();
+            const sueldoBase = parseFloat(document.getElementById("sueldoBase").value);
+
+            if (!nombre || Number.isNaN(sueldoBase)) {
+                mostrarMensaje("Introduce nombre y sueldo base.", true);
+                return;
+            }
+
+            empleado = new Empleado(nombre, sueldoBase);
+            document.getElementById("panelEmpleado").hidden = false;
+            actualizarPanel();
+        });
+
+        document.getElementById("btnCambiar").addEventListener("click", () => {
+            const nuevo = parseFloat(document.getElementById("nuevoSueldo").value);
+            empleado.sueldo = nuevo;
+            actualizarPanel();
+        });
+    </script>
+</body>
+
+</html>

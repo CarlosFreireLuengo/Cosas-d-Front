@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 5: Hucha Digital Segura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin: 1.5rem 0.5rem 0 0;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+
+        .mensaje {
+            margin-top: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+        }
+
+        .error {
+            background: #fdecea;
+            color: #b71c1c;
+        }
+
+        .ok {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hucha Digital Segura</h1>
+
+    <label for="cantidad">Cantidad a ingresar (€)</label>
+    <input type="number" id="cantidad" placeholder="50">
+
+    <button id="btnIngresar">Ingresar</button>
+    <button id="btnVer">Ver ahorros</button>
+    <button id="btnDirecto">Probar acceso directo</button>
+
+    <div id="mensaje"></div>
+
+    <div class="ficha">
+        <p><strong>Ahorros:</strong> <span id="ahorros">(pulsa "Ver ahorros")</span></p>
+    </div>
+
+    <script>
+        class Hucha {
+            #ahorros;
+
+            constructor() {
+                this.#ahorros = 0;
+            }
+
+            ingresar(cantidad) {
+                if (typeof cantidad === "number" && cantidad > 0) {
+                    this.#ahorros += cantidad;
+                    return true;
+                }
+                return false;
+            }
+
+            verAhorros() {
+                return this.#ahorros;
+            }
+        }
+
+        const hucha = new Hucha();
+
+        function mostrarMensaje(texto, esError = false) {
+            const caja = document.getElementById("mensaje");
+            caja.className = "mensaje " + (esError ? "error" : "ok");
+            caja.textContent = texto;
+        }
+
+        document.getElementById("btnIngresar").addEventListener("click", () => {
+            const cantidad = parseFloat(document.getElementById("cantidad").value);
+
+            if (hucha.ingresar(cantidad)) {
+                mostrarMensaje(`Has ingresado ${cantidad} €.`);
+            } else {
+                mostrarMensaje("Error: la cantidad debe ser mayor que cero.", true);
+            }
+        });
+
+        document.getElementById("btnVer").addEventListener("click", () => {
+            document.getElementById("ahorros").textContent = `${hucha.verAhorros()} €`;
+        });
+
+        // hucha.#ahorros fuera de la clase sería un SyntaxError, así que probamos
+        // el acceso "normal" (hucha.ahorros), que no existe: devuelve undefined.
+        document.getElementById("btnDirecto").addEventListener("click", () => {
+            mostrarMensaje(`hucha.ahorros → ${hucha.ahorros}. La propiedad #ahorros es privada y no se puede leer ni modificar desde fuera.`, true);
+            console.log("hucha.ahorros =", hucha.ahorros);
+        });
+    </script>
+</body>
+
+</html>

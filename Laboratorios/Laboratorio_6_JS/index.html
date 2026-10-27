@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 6: Tarjetas de Usuarios Dinámicas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        #btnRestaurar {
+            margin-bottom: 1rem;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+
+        .vacio {
+            color: #777;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tarjetas de Usuarios Dinámicas</h1>
+
+    <button id="btnRestaurar">Restaurar usuarios</button>
+
+    <div id="contenedor"></div>
+
+    <script>
+        const usuarios = [
+            { id: 1, nombre: "Ana", edad: 25 },
+            { id: 2, nombre: "Carlos", edad: 30 },
+        ];
+
+        const contenedor = document.getElementById("contenedor");
+
+        // Genera dinámicamente un bloque HTML por cada usuario
+        function mostrarUsuarios(lista) {
+            contenedor.innerHTML = lista
+                .map(
+                    (usuario) => `
+                <div class="ficha tarjeta" data-id="${usuario.id}">
+                    <p><strong>${usuario.nombre}</strong></p>
+                    <p>Edad: ${usuario.edad} años</p>
+                    <button class="eliminar" data-id="${usuario.id}">Eliminar</button>
+                </div>`
+                )
+                .join("");
+        }
+
+        // Un único listener en el contenedor padre (delegación de eventos)
+        contenedor.addEventListener("click", (evento) => {
+            const boton = evento.target.closest("button.eliminar");
+            if (!boton) return;
+
+            const id = boton.dataset.id;
+            const tarjeta = contenedor.querySelector(`.tarjeta[data-id="${id}"]`);
+            if (tarjeta) {
+                tarjeta.remove();
+                console.log(`Tarjeta del usuario ${id} eliminada`);
+            }
+        });
+
+        document.getElementById("btnRestaurar").addEventListener("click", () => mostrarUsuarios(usuarios));
+
+        mostrarUsuarios(usuarios);
+    </script>
+</body>
+
+</html>

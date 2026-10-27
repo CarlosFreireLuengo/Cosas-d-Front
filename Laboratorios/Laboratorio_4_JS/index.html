@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio 4: Reproductor de Sonidos de Animales</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        button {
+            margin: 0.25rem 0.25rem 0 0;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .ficha {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ficha p {
+            margin: 0.25rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Reproductor de Sonidos de Animales</h1>
+
+    <div>
+        <button id="btnAnimal">Añadir Animal</button>
+        <button id="btnPerro">Añadir Perro</button>
+        <button id="btnGato">Añadir Gato</button>
+        <button id="btnCantar">Hacer cantar</button>
+        <button id="btnLimpiar">Limpiar</button>
+    </div>
+
+    <div class="ficha">
+        <strong>Lista de animales:</strong>
+        <p id="lista">(vacía)</p>
+    </div>
+
+    <div class="ficha">
+        <strong>Sonidos:</strong>
+        <div id="salida"></div>
+    </div>
+
+    <script>
+        // Imprime en la consola y también en la página
+        function imprimir(texto) {
+            console.log(texto);
+            const p = document.createElement("p");
+            p.textContent = texto;
+            document.getElementById("salida").appendChild(p);
+        }
+
+        class Animal {
+            hacerSonido() {
+                imprimir("El animal emite un sonido");
+            }
+        }
+
+        class Perro extends Animal {
+            hacerSonido() {
+                imprimir("¡Guau!");
+            }
+        }
+
+        class Gato extends Animal {
+            hacerSonido() {
+                imprimir("¡Miau!");
+            }
+        }
+
+        function hacerCantar(listaDeAnimales) {
+            for (const animal of listaDeAnimales) {
+                animal.hacerSonido();
+            }
+        }
+
+        const animales = [];
+
+        function actualizarLista() {
+            document.getElementById("lista").textContent = animales.length
+                ? animales.map((a) => a.constructor.name).join(", ")
+                : "(vacía)";
+        }
+
+        document.getElementById("btnAnimal").addEventListener("click", () => { animales.push(new Animal()); actualizarLista(); });
+        document.getElementById("btnPerro").addEventListener("click", () => { animales.push(new Perro()); actualizarLista(); });
+        document.getElementById("btnGato").addEventListener("click", () => { animales.push(new Gato()); actualizarLista(); });
+
+        document.getElementById("btnCantar").addEventListener("click", () => {
+            if (animales.length === 0) {
+                alert("Añade algún animal primero.");
+                return;
+            }
+            hacerCantar(animales);
+        });
+
+        document.getElementById("btnLimpiar").addEventListener("click", () => {
+            animales.length = 0;
+            actualizarLista();
+            document.getElementById("salida").innerHTML = "";
+        });
+    </script>
+</body>
+
+</html>
