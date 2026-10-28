@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Práctica 4 - Calculadora de propina</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+    <main class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="card shadow-sm" style="max-width: 460px; width: 100%;">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">Calculadora de propina</h1>
+                <div class="mb-3">
+                    <label for="cuenta" class="form-label">Monto de la cuenta</label>
+                    <div class="input-group">
+                        <span class="input-group-text">€</span>
+                        <input type="number" id="cuenta" class="form-control" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="propina" class="form-label">Porcentaje de propina</label>
+                    <div class="input-group">
+                        <input type="number" id="propina" class="form-control" min="0" max="100" step="1" value="10">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+                <div id="resultado" class="alert alert-secondary mb-0" role="status">
+                    Introduce el monto de la cuenta para ver el total.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const inputCuenta = document.getElementById('cuenta');
+        const inputPropina = document.getElementById('propina');
+        const resultado = document.getElementById('resultado');
+        const euros = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+
+        function calcular() {
+            const cuenta = parseFloat(inputCuenta.value);
+            const porcentaje = parseFloat(inputPropina.value);
+
+            resultado.className = 'alert mb-0';
+
+            if (isNaN(cuenta) || isNaN(porcentaje) || cuenta < 0 || porcentaje < 0) {
+                resultado.classList.add('alert-secondary');
+                resultado.textContent = 'Introduce el monto de la cuenta y un porcentaje válido.';
+                return;
+            }
+
+            const propina = cuenta * porcentaje / 100;
+            const total = cuenta + propina;
+
+            resultado.classList.add('alert-success');
+            resultado.innerHTML =
+                'Propina: <strong>' + euros.format(propina) + '</strong><br>' +
+                'Total a pagar: <strong>' + euros.format(total) + '</strong>';
+        }
+
+        inputCuenta.addEventListener('input', calcular);
+        inputPropina.addEventListener('input', calcular);
+        calcular();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
