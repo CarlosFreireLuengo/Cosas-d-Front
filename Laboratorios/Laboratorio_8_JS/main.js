@@ -1,6 +1,6 @@
 import { celsiusAFahrenheit, fahrenheitACelsius } from "./conversor.js";
 
-const salida = document.getElementById("salida");
+const salida = document.querySelector("#salida");
 
 // Muestra el texto en la consola y también en la página
 function imprimir(texto) {

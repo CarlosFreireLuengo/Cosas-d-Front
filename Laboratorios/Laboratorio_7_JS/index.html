@@ -86,7 +86,7 @@
         }
 
         function mostrarResultado(usuario) {
-            const resultado = document.getElementById("resultado");
+            const resultado = document.querySelector("#resultado");
             resultado.innerHTML = "";
 
             const ficha = document.createElement("div");
@@ -109,8 +109,8 @@
             resultado.appendChild(ficha);
         }
 
-        document.getElementById("btnBuscar").addEventListener("click", async () => {
-            const id = document.getElementById("idUsuario").value.trim();
+        document.querySelector("#btnBuscar").addEventListener("click", async () => {
+            const id = document.querySelector("#idUsuario").value.trim();
 
             if (!id) {
                 alert("Introduce un ID.");

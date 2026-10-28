@@ -98,7 +98,7 @@
         const catalogo = [];
 
         function pintarCatalogo() {
-            const contenedor = document.getElementById("catalogo");
+            const contenedor = document.querySelector("#catalogo");
             contenedor.innerHTML = "";
 
             catalogo.forEach((producto) => {
@@ -126,10 +126,10 @@
             });
         }
 
-        document.getElementById("btnAgregar").addEventListener("click", () => {
-            const nombre = document.getElementById("nombre").value.trim();
-            const precio = parseFloat(document.getElementById("precio").value);
-            const descuentoTexto = document.getElementById("descuento").value;
+        document.querySelector("#btnAgregar").addEventListener("click", () => {
+            const nombre = document.querySelector("#nombre").value.trim();
+            const precio = parseFloat(document.querySelector("#precio").value);
+            const descuentoTexto = document.querySelector("#descuento").value;
             const descuento = parseFloat(descuentoTexto);
 
             if (!nombre || Number.isNaN(precio) || precio < 0) {

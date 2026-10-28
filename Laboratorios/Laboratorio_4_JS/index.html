@@ -59,7 +59,7 @@
             console.log(texto);
             const p = document.createElement("p");
             p.textContent = texto;
-            document.getElementById("salida").appendChild(p);
+            document.querySelector("#salida").appendChild(p);
         }
 
         class Animal {
@@ -89,16 +89,16 @@
         const animales = [];
 
         function actualizarLista() {
-            document.getElementById("lista").textContent = animales.length
+            document.querySelector("#lista").textContent = animales.length
                 ? animales.map((a) => a.constructor.name).join(", ")
                 : "(vacía)";
         }
 
-        document.getElementById("btnAnimal").addEventListener("click", () => { animales.push(new Animal()); actualizarLista(); });
-        document.getElementById("btnPerro").addEventListener("click", () => { animales.push(new Perro()); actualizarLista(); });
-        document.getElementById("btnGato").addEventListener("click", () => { animales.push(new Gato()); actualizarLista(); });
+        document.querySelector("#btnAnimal").addEventListener("click", () => { animales.push(new Animal()); actualizarLista(); });
+        document.querySelector("#btnPerro").addEventListener("click", () => { animales.push(new Perro()); actualizarLista(); });
+        document.querySelector("#btnGato").addEventListener("click", () => { animales.push(new Gato()); actualizarLista(); });
 
-        document.getElementById("btnCantar").addEventListener("click", () => {
+        document.querySelector("#btnCantar").addEventListener("click", () => {
             if (animales.length === 0) {
                 alert("Añade algún animal primero.");
                 return;
@@ -106,10 +106,10 @@
             hacerCantar(animales);
         });
 
-        document.getElementById("btnLimpiar").addEventListener("click", () => {
+        document.querySelector("#btnLimpiar").addEventListener("click", () => {
             animales.length = 0;
             actualizarLista();
-            document.getElementById("salida").innerHTML = "";
+            document.querySelector("#salida").innerHTML = "";
         });
     </script>
 </body>

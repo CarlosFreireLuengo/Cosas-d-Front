@@ -101,13 +101,13 @@
         const hucha = new Hucha();
 
         function mostrarMensaje(texto, esError = false) {
-            const caja = document.getElementById("mensaje");
+            const caja = document.querySelector("#mensaje");
             caja.className = "mensaje " + (esError ? "error" : "ok");
             caja.textContent = texto;
         }
 
-        document.getElementById("btnIngresar").addEventListener("click", () => {
-            const cantidad = parseFloat(document.getElementById("cantidad").value);
+        document.querySelector("#btnIngresar").addEventListener("click", () => {
+            const cantidad = parseFloat(document.querySelector("#cantidad").value);
 
             if (hucha.ingresar(cantidad)) {
                 mostrarMensaje(`Has ingresado ${cantidad} €.`);
@@ -116,13 +116,13 @@
             }
         });
 
-        document.getElementById("btnVer").addEventListener("click", () => {
-            document.getElementById("ahorros").textContent = `${hucha.verAhorros()} €`;
+        document.querySelector("#btnVer").addEventListener("click", () => {
+            document.querySelector("#ahorros").textContent = `${hucha.verAhorros()} €`;
         });
 
         // hucha.#ahorros fuera de la clase sería un SyntaxError, así que probamos
         // el acceso "normal" (hucha.ahorros), que no existe: devuelve undefined.
-        document.getElementById("btnDirecto").addEventListener("click", () => {
+        document.querySelector("#btnDirecto").addEventListener("click", () => {
             mostrarMensaje(`hucha.ahorros → ${hucha.ahorros}. La propiedad #ahorros es privada y no se puede leer ni modificar desde fuera.`, true);
             console.log("hucha.ahorros =", hucha.ahorros);
         });

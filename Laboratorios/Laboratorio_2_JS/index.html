@@ -87,7 +87,7 @@
         const SUELDO_MINIMO = 1000;
 
         function mostrarMensaje(texto, esError = false) {
-            const caja = document.getElementById("mensaje");
+            const caja = document.querySelector("#mensaje");
             caja.className = "mensaje " + (esError ? "error" : "ok");
             caja.textContent = texto;
             if (esError) console.error(texto);
@@ -120,13 +120,13 @@
         let empleado = null;
 
         function actualizarPanel() {
-            document.getElementById("verNombre").textContent = empleado.nombre;
-            document.getElementById("verSueldo").textContent = empleado.sueldo;
+            document.querySelector("#verNombre").textContent = empleado.nombre;
+            document.querySelector("#verSueldo").textContent = empleado.sueldo;
         }
 
-        document.getElementById("btnCrear").addEventListener("click", () => {
-            const nombre = document.getElementById("nombre").value.trim();
-            const sueldoBase = parseFloat(document.getElementById("sueldoBase").value);
+        document.querySelector("#btnCrear").addEventListener("click", () => {
+            const nombre = document.querySelector("#nombre").value.trim();
+            const sueldoBase = parseFloat(document.querySelector("#sueldoBase").value);
 
             if (!nombre || Number.isNaN(sueldoBase)) {
                 mostrarMensaje("Introduce nombre y sueldo base.", true);
@@ -134,12 +134,12 @@
             }
 
             empleado = new Empleado(nombre, sueldoBase);
-            document.getElementById("panelEmpleado").hidden = false;
+            document.querySelector("#panelEmpleado").hidden = false;
             actualizarPanel();
         });
 
-        document.getElementById("btnCambiar").addEventListener("click", () => {
-            const nuevo = parseFloat(document.getElementById("nuevoSueldo").value);
+        document.querySelector("#btnCambiar").addEventListener("click", () => {
+            const nuevo = parseFloat(document.querySelector("#nuevoSueldo").value);
             empleado.sueldo = nuevo;
             actualizarPanel();
         });

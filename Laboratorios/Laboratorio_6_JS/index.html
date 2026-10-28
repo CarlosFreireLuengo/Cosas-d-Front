@@ -54,7 +54,7 @@
             { id: 2, nombre: "Carlos", edad: 30 },
         ];
 
-        const contenedor = document.getElementById("contenedor");
+        const contenedor = document.querySelector("#contenedor");
 
         // Genera dinámicamente un bloque HTML por cada usuario
         function mostrarUsuarios(lista) {
@@ -83,7 +83,7 @@
             }
         });
 
-        document.getElementById("btnRestaurar").addEventListener("click", () => mostrarUsuarios(usuarios));
+        document.querySelector("#btnRestaurar").addEventListener("click", () => mostrarUsuarios(usuarios));
 
         mostrarUsuarios(usuarios);
     </script>
