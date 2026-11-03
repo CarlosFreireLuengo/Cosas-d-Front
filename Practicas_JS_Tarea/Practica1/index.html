@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>LAB 7 - Sensores IoT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light min-vh-100 p-4">
+    <div class="container" style="max-width: 600px;">
+        <h1 class="h3 mb-4 text-center">Panel de Control de Telemetría</h1>
+        <div id="contenedorSensores"></div>
+    </div>
+
+    <script>
+        const sensores = [
+            { id: "s-101", tipo: "Temperatura Caldera", valor: "92 °C", estado: "Critico" },
+            { id: "s-102", tipo: "Presión Hidráulica", valor: "2.1 Bar", estado: "Normal" },
+            { id: "s-103", tipo: "Nivel de Refrigerante", valor: "15 %", estado: "Atencion" },
+            { id: "s-104", tipo: "Flujo de Aire", valor: "120 L/min", estado: "Normal" }
+        ];
+
+        const contenedor = document.querySelector("#contenedorSensores");
+
+        // 1: Implementar la función renderizarSensores(lista)
+        // Clase del badge y texto visible según el estado del sensor
+        const badgesPorEstado = {
+            Normal:   { clase: "bg-success",   texto: "Normal" },
+            Atencion: { clase: "bg-warning text-dark", texto: "Atención" },
+            Critico:  { clase: "bg-danger",    texto: "Crítico" },
+            Inactivo: { clase: "bg-secondary", texto: "Inactivo" }
+        };
+
+        function renderizarSensores(lista) {
+            contenedor.innerHTML = lista.map(({ id, tipo, valor, estado }) => {
+                const badge = badgesPorEstado[estado] || badgesPorEstado.Normal;
+                const inactivo = estado === "Inactivo";
+
+                return `
+                    <div class="card bg-secondary-subtle text-dark mb-3 ${inactivo ? "opacity-50" : ""}">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-1">${tipo}</h5>
+                                <p class="card-text fs-4 fw-bold mb-2">${valor}</p>
+                                <span class="badge ${badge.clase}">${badge.texto}</span>
+                            </div>
+                            <button class="btn btn-outline-danger btn-sm btn-desconectar" data-id="${id}" ${inactivo ? "disabled" : ""}>
+                                Desconectar
+                            </button>
+                        </div>
+                    </div>`;
+            }).join("");
+        }
+
+        // 2: Gestión de eventos (delegación: un único listener en el contenedor)
+        contenedor.addEventListener("click", (e) => {
+            const boton = e.target.closest(".btn-desconectar");
+            if (!boton) return;
+
+            const id = boton.dataset.id;
+            const sensor = sensores.find(s => String(s.id) === id);
+            if (sensor) {
+                sensor.estado = "Inactivo";
+                renderizarSensores(sensores);
+            }
+        });
+
+        renderizarSensores(sensores);
+    </script>
+</body>
+</html>
