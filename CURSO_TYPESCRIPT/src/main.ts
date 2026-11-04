@@ -109,11 +109,10 @@ function agregarProducto() {
         service.agregarProducto(producto);
         console.log("Producto agregado correctamente.");
     } catch (error) {
-            console.error(`Error: ${(error as Error).message}`);
-        
+        console.error(`Error: ${(error as Error).message}`);
+
     }
 }
-
 function actualizarProducto() {
     try {
         const id = Number(prompt("Ingrese el ID del producto a actualizar: "));
@@ -124,15 +123,60 @@ function actualizarProducto() {
             return;
         }
 
-        const nombre = prompt(`Nombre: (${producto.nombre}):` || producto.nombre );
-        const precioTexto = prompt(`Precio: (${producto.precio}):`);
-        const ok  = service.updateProducto(id, {
-            nombre: nombre || producto.nombre,
-            precio: precioTexto ? Number(precioTexto) : producto.precio
-        });
+        const nombre = prompt(`Nombre (${producto.nombre}): `)?.trim() || producto.nombre;
+        const precioTexto = prompt(`Precio (${producto.precio}): `)?.trim();
+        const precio = precioTexto ? Number(precioTexto) : producto.precio;
 
-
-
+        const ok = service.updateProducto(id, { nombre, precio });
+        console.log(ok ? "Producto actualizado correctamente." : "Error al actualizar el producto.");
     } catch (error) {
+        console.error(`Error: ${(error as Error).message}`);
     }
 }
+
+
+function eliminarProducto() {
+    const id = Number(prompt("Ingrese el ID del producto a eliminar: "));
+    const ok = service.deleteProducto(id);
+    console.log(ok ? "Producto eliminado correctamente." : "Producto no encontrado.");
+}
+
+
+function iniciarMenu() {
+    while (true) {
+        console.log("\n--- Menú de Productos ---");
+        console.log("1. Listar productos");
+        console.log("2. Agregar producto");
+        console.log("3. Actualizar producto");
+        console.log("4. Eliminar producto");
+        console.log("5. Salir");
+
+        const opcion = prompt("Seleccione una opción: ")?.trim();
+
+        switch (opcion) {
+            case "1":
+                listarProductos();
+                break;
+            case "2":
+                agregarProducto();
+                break;
+            case "3":
+                actualizarProducto();
+                break;
+            case "4":
+                eliminarProducto();
+                break;
+            case "5":
+                console.log("Saliendo del programa...");
+                return;
+            default:
+                console.log("Opción no válida. Intente nuevamente.");
+        }
+    }
+}
+
+
+// ---------- Inicio del programa ----------
+service.agregarProducto(new Producto(1, "Ratón", 100));
+service.agregarProducto(new Producto(2, "Teclado", 200));
+iniciarMenu();
