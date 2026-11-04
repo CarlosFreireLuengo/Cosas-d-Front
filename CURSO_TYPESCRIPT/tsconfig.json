@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES2020", // versión JS que se generar�
+        "module": "ES2020", // usa módulos ES
+        "rootDir": "./src", // carpeta con tus .ts
+        "outDir": "./dist", // donde se generaran los .js
+        "strict": true, // habilita tipado estricto
+        "esModuleInterop": true, // permite import de CommonJS
+        "experimentalDecorators": true, // necesario para @decorators
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

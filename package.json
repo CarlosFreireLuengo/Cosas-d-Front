@@ -1,0 +1,30 @@
+{
+  "name": "cosas-d-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlosFreireLuengo/Cosas-d-Front.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CarlosFreireLuengo/Cosas-d-Front/issues"
+  },
+  "homepage": "https://github.com/CarlosFreireLuengo/Cosas-d-Front#readme",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/prompt-sync": "^4.2.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
