@@ -134,7 +134,6 @@ function actualizarProducto() {
     }
 }
 
-
 function eliminarProducto() {
     const id = Number(prompt("Ingrese el ID del producto a eliminar: "));
     const ok = service.deleteProducto(id);
