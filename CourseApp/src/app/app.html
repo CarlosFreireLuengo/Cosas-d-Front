@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h1>CourseApp</h1>
+  <table class="table table-striped">
+    <thead class="table-primary">
+      <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>seatCapacity</th>
+        <th>instructorName</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (course of $any(this).courses; track course.id) {
+        <tr>
+          <td>{{ course.id }}</td>
+          <td>{{ course.title }}</td>
+          <td>{{ course.seatCapacity }}</td>
+          <td>{{ course.instructorName }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

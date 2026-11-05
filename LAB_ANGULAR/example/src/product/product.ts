@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Model } from '../app/data/repository.model';
+import {CommonModule} from '@angular/common'
 @Component({
-  imports: [],
+  imports: [CommonModule],
   selector: 'app-product',
   styleUrl: './product.css',
   templateUrl: './product.html',
