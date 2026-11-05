@@ -20,4 +20,41 @@
       }
     </tbody>
   </table>
+    <!-- Ejercicio 10.1 -->
+  <h2 class="mt-4">Ejercicio 10.1</h2>
+  <h3
+    class="p-2"
+    [class.bg-warning]="courses[1].seatCapacity < 17"
+    [class.bg-success]="courses[1].seatCapacity >= 17"
+  >
+    {{ courses[1].title }}
+  </h3>
+
+    <!-- Ejercicio 10.2 -->
+  <h2 class="mt-4">Ejercicio 10.2</h2>
+  @for (course of courses.slice(0, 3); track course.id) {
+    <div
+      class="p-2 mb-2"
+      [ngClass]="{
+        'text-center bg-warning': course.title === 'Angular',
+        'bg-info': course.seatCapacity > 17
+      }"
+    >
+      {{ course.title }} ({{ course.seatCapacity }} plazas)
+    </div>
+  }
+
+    <!-- Ejercicio 10.3 -->
+  <h2 class="mt-4">Ejercicio 10.3</h2>
+  @for (course of courses.slice(0, 3); track course.id) {
+    <div
+      [ngStyle]="{
+        'margin.px': 100,
+        'color': course.seatCapacity >= 17 ? 'green' : 'red',
+        'font-size.px': course.title === 'Angular' ? 30 : 20
+      }"
+    >
+      {{ course.title }} ({{ course.seatCapacity }} plazas)
+    </div>
+  }
 </div>
