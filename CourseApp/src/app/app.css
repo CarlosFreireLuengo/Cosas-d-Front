@@ -1,0 +1,7 @@
+.tabla-cursos .fila-par > td {
+  background-color: #cfe2ff;
+}
+
+.tabla-cursos .fila-impar > td {
+  background-color: #ffffff;
+}

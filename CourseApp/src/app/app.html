@@ -57,4 +57,47 @@
       {{ course.title }} ({{ course.seatCapacity }} plazas)
     </div>
   }
+
+
+    <!-- Ejercicio 11.1 -->
+  <h2 class="mt-4">Ejercicio 11.1</h2>
+  <p>Número de cursos en el data model: <strong>{{ courses.length }}</strong></p>
+
+  <div
+    *ngIf="courses.length >= 4 && courses[0]?.title !== 'Angular'"
+    class="alert alert-success"
+  >
+    Hay al menos cuatro cursos y el primero no es Angular.
+  </div>
+
+
+
+    <!-- Ejercicio 11.2 -->
+  <h2 class="mt-4">Ejercicio 11.2</h2>
+  <table class="table tabla-cursos">
+    <thead class="table-primary">
+      <tr>
+        <th>Índice</th>
+        <th>Id</th>
+        <th>Título</th>
+        <th>Plazas</th>
+        <th>Instructor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let course of courses; let i = index; let even = even"
+        [class.fila-par]="even"
+        [class.fila-impar]="!even"
+      >
+        <td>{{ i }}</td>
+        <td>{{ course.id }}</td>
+        <td>{{ course.title }}</td>
+        <td>{{ course.seatCapacity }}</td>
+        <td>{{ course.instructorName }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
 </div>

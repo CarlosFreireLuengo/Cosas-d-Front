@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass, NgStyle, NgIf, NgFor } from '@angular/common';
 import { CourseRepository } from './repositories/course.repository';
 
 @Component({
   selector: 'app-root',
-  imports: [NgClass, NgStyle],
+  imports: [NgClass, NgStyle, NgIf, NgFor],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
