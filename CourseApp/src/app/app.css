@@ -1,7 +1,61 @@
-.tabla-cursos .fila-par > td {
-  background-color: #cfe2ff;
+/* Estructura visual y márgenes entre secciones */
+h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px dashed #dee2e6;
 }
 
-.tabla-cursos .fila-impar > td {
+/* Estilos de tabla y filas */
+.fila-par {
+  background-color: #f8f9fa;
+}
+
+.fila-impar {
   background-color: #ffffff;
+}
+
+.fila-seleccionada {
+  background-color: #cfe2ff !important;
+  font-weight: bold;
+}
+
+tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Tooltip personalizado */
+.tooltip-trigger {
+  position: relative;
+  text-decoration: underline dotted;
+}
+
+.custom-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 1050;
+  pointer-events: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: -40px;
+  margin-left: 20px;
+}
+
+/* Feedback visual de formularios */
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }

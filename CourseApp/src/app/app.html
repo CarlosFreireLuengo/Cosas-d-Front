@@ -1,79 +1,17 @@
 <div class="container mt-4">
   <h1>CourseApp</h1>
-  <table class="table table-striped">
-    <thead class="table-primary">
-      <tr>
-        <th>id</th>
-        <th>title</th>
-        <th>seatCapacity</th>
-        <th>instructorName</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (course of $any(this).courses; track course.id) {
-        <tr>
-          <td>{{ course.id }}</td>
-          <td>{{ course.title }}</td>
-          <td>{{ course.seatCapacity }}</td>
-          <td>{{ course.instructorName }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-    <!-- Ejercicio 10.1 -->
-  <h2 class="mt-4">Ejercicio 10.1</h2>
-  <h3
-    class="p-2"
-    [class.bg-warning]="courses[1].seatCapacity < 17"
-    [class.bg-success]="courses[1].seatCapacity >= 17"
-  >
-    {{ courses[1].title }}
-  </h3>
 
-    <!-- Ejercicio 10.2 -->
-  <h2 class="mt-4">Ejercicio 10.2</h2>
-  @for (course of courses.slice(0, 3); track course.id) {
-    <div
-      class="p-2 mb-2"
-      [ngClass]="{
-        'text-center bg-warning': course.title === 'Angular',
-        'bg-info': course.seatCapacity > 17
-      }"
-    >
-      {{ course.title }} ({{ course.seatCapacity }} plazas)
-    </div>
-  }
-
-    <!-- Ejercicio 10.3 -->
-  <h2 class="mt-4">Ejercicio 10.3</h2>
-  @for (course of courses.slice(0, 3); track course.id) {
-    <div
-      [ngStyle]="{
-        'margin.px': 100,
-        'color': course.seatCapacity >= 17 ? 'green' : 'red',
-        'font-size.px': course.title === 'Angular' ? 30 : 20
-      }"
-    >
-      {{ course.title }} ({{ course.seatCapacity }} plazas)
-    </div>
-  }
-
-
-    <!-- Ejercicio 11.1 -->
+  <!-- Ejercicios 10.1 a 11.1 se mantienen igual -->
   <h2 class="mt-4">Ejercicio 11.1</h2>
   <p>Número de cursos en el data model: <strong>{{ courses.length }}</strong></p>
-
-  <div
-    *ngIf="courses.length >= 4 && courses[0]?.title !== 'Angular'"
-    class="alert alert-success"
-  >
+  @if (courses.length >= 4 && courses[0]?.title !== 'Angular') {
+  <div class="alert alert-success">
     Hay al menos cuatro cursos y el primero no es Angular.
   </div>
+}
 
-
-
-    <!-- Ejercicio 11.2 -->
-  <h2 class="mt-4">Ejercicio 11.2</h2>
+  <!-- Ejercicio 12.1: Tabla Interactiva Mejorada -->
+  <h2 class="mt-4">Ejercicio 12.1 - Tabla Interactiva</h2>
   <table class="table tabla-cursos">
     <thead class="table-primary">
       <tr>
@@ -85,19 +23,115 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let course of courses; let i = index; let even = even"
-        [class.fila-par]="even"
-        [class.fila-impar]="!even"
-      >
-        <td>{{ i }}</td>
-        <td>{{ course.id }}</td>
-        <td>{{ course.title }}</td>
-        <td>{{ course.seatCapacity }}</td>
-        <td>{{ course.instructorName }}</td>
-      </tr>
+      @for (course of courses; track course.id; let i = $index; let even = $even) {
+        <tr 
+          [class.fila-par]="even" 
+          [class.fila-impar]="!even"
+          [class.fila-seleccionada]="selectedCourse?.id === course.id"
+          (click)="selectCourse(course)"
+        >
+          <td 
+            (mouseenter)="onMouseEnter(course)" 
+            (mouseleave)="onMouseLeave()"
+            class="tooltip-trigger"
+          >
+            {{ i }}
+          </td>
+          <td>{{ course.id }}</td>
+          <td>{{ course.title }}</td>
+          <td>{{ course.seatCapacity }}</td>
+          <td>{{ course.instructorName }}</td>
+        </tr>
+      }
     </tbody>
   </table>
 
+  <!-- Tooltip Flotante -->
+  @if (hoveredCourse) {
+    <div class="custom-tooltip">
+      <strong>{{ hoveredCourse.title }}</strong><br />
+      Plazas: {{ hoveredCourse.seatCapacity }}
+    </div>
+  }
 
+  <!-- Inputs con ngModel para el curso seleccionado -->
+  @if (selectedCourse) {
+    <div class="mt-4 p-3 border rounded bg-light">
+      <h3>Editar Curso Seleccionado</h3>
+      <div class="mb-3">
+        <label class="form-label">Título (Entrada):</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="selectedCourse.title" 
+          placeholder="Título del curso"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Vista previa (Salida):</label>
+        <p class="form-control-plaintext fw-bold text-primary">{{ selectedCourse.title }}</p>
+      </div>
+    </div>
+  }
+
+  <!-- Ejercicio 12.2: Formulario Reactivo con Validaciones -->
+  <h2 class="mt-4">Ejercicio 12.2 - Formulario con Validaciones</h2>
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
+    
+    <div class="mb-3">
+      <label for="title" class="form-label">Título del Curso</label>
+      <input 
+        type="text" 
+        id="title" 
+        class="form-control" 
+        formControlName="title"
+        [class.is-invalid]="attemptedSubmit && courseForm.get('title')?.invalid"
+      />
+      @if (attemptedSubmit && courseForm.get('title')?.invalid) {
+        <div class="invalid-feedback d-block">
+          @if (courseForm.get('title')?.errors?.['required']) {
+            <span>El título es obligatorio.</span>
+          }
+          @if (courseForm.get('title')?.errors?.['minlength']) {
+            <span>El título debe tener al menos 5 caracteres.</span>
+          }
+          @if (courseForm.get('title')?.errors?.['pattern']) {
+            <span>El título solo debe contener letras y espacios.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="seatCapacity" class="form-label">Capacidad de Plazas</label>
+      <input 
+        type="text" 
+        id="seatCapacity" 
+        class="form-control" 
+        formControlName="seatCapacity"
+        [class.is-invalid]="attemptedSubmit && courseForm.get('seatCapacity')?.invalid"
+      />
+      @if (attemptedSubmit && courseForm.get('seatCapacity')?.invalid) {
+        <div class="invalid-feedback d-block">
+          @if (courseForm.get('seatCapacity')?.errors?.['required']) {
+            <span>La capacidad es obligatoria.</span>
+          }
+          @if (courseForm.get('seatCapacity')?.errors?.['pattern']) {
+            <span>La capacidad solo debe contener números.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn btn-primary" 
+      [disabled]="!courseForm.valid"
+    >
+      Create
+    </button>
+    <small class="text-muted ms-2">
+      (El botón se habilita automáticamente cuando todos los campos son válidos)
+    </small>
+  </form>
 </div>
