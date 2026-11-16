@@ -1,137 +1,175 @@
 <div class="container mt-4">
   <h1>CourseApp</h1>
 
-  <!-- Ejercicios 10.1 a 11.1 se mantienen igual -->
-  <h2 class="mt-4">Ejercicio 11.1</h2>
-  <p>Número de cursos en el data model: <strong>{{ courses.length }}</strong></p>
-  @if (courses.length >= 4 && courses[0]?.title !== 'Angular') {
-  <div class="alert alert-success">
-    Hay al menos cuatro cursos y el primero no es Angular.
-  </div>
-}
+  <!-- EJERCICIO 10.1 -->
+  <h2 class="section-title">Ejercicio 10.1</h2>
+  <h3 class="p-2" 
+      [class.bg-warning]="courses[1].seatCapacity < 17" 
+      [class.bg-success]="courses[1].seatCapacity >= 17">
+    {{ courses[1].title }}
+  </h3>
 
-  <!-- Ejercicio 12.1: Tabla Interactiva Mejorada -->
-  <h2 class="mt-4">Ejercicio 12.1 - Tabla Interactiva</h2>
+  <!-- EJERCICIO 10.2 -->
+  <h2 class="section-title">Ejercicio 10.2</h2>
+  @for (course of courses.slice(0, 3); track course.id) {
+    <div class="p-2 mb-2"
+         [class.text-center]="course.title === 'Angular'"
+         [class.bg-warning]="course.title === 'Angular'"
+         [class.bg-info]="course.seatCapacity > 17">
+      {{ course.title }} ({{ course.seatCapacity }} plazas)
+    </div>
+  }
+
+  <!-- EJERCICIO 10.3 -->
+  <h2 class="section-title">Ejercicio 10.3</h2>
+  @for (course of courses.slice(0, 3); track course.id) {
+    <div [style.margin.px]="100"
+         [style.color]="course.seatCapacity >= 17 ? 'green' : 'red'"
+         [style.font-size.px]="course.title === 'Angular' ? 30 : 20">
+      {{ course.title }} ({{ course.seatCapacity }} plazas)
+    </div>
+  }
+
+  <!-- EJERCICIO 11.1 -->
+  <h2 class="section-title">Ejercicio 11.1</h2>
+  <p>Número de cursos: <strong>{{ courses.length }}</strong></p>
+  @if (courses.length >= 4 && courses[0]?.title !== 'Angular') {
+    <div class="alert alert-success">Hay al menos cuatro cursos y el primero no es Angular.</div>
+  }
+
+  <!-- EJERCICIO 11.2 -->
+  <h2 class="section-title">Ejercicio 11.2</h2>
   <table class="table tabla-cursos">
     <thead class="table-primary">
-      <tr>
-        <th>Índice</th>
-        <th>Id</th>
-        <th>Título</th>
-        <th>Plazas</th>
-        <th>Instructor</th>
-      </tr>
+      <tr><th>Índice</th><th>Id</th><th>Título</th><th>Plazas</th><th>Instructor</th></tr>
     </thead>
     <tbody>
       @for (course of courses; track course.id; let i = $index; let even = $even) {
-        <tr 
-          [class.fila-par]="even" 
-          [class.fila-impar]="!even"
-          [class.fila-seleccionada]="selectedCourse?.id === course.id"
-          (click)="selectCourse(course)"
-        >
-          <td 
-            (mouseenter)="onMouseEnter(course)" 
-            (mouseleave)="onMouseLeave()"
-            class="tooltip-trigger"
-          >
-            {{ i }}
-          </td>
-          <td>{{ course.id }}</td>
-          <td>{{ course.title }}</td>
-          <td>{{ course.seatCapacity }}</td>
-          <td>{{ course.instructorName }}</td>
+        <tr [class.fila-par]="even" [class.fila-impar]="!even">
+          <td>{{ i }}</td><td>{{ course.id }}</td><td>{{ course.title }}</td>
+          <td>{{ course.seatCapacity }}</td><td>{{ course.instructorName }}</td>
         </tr>
       }
     </tbody>
   </table>
 
-  <!-- Tooltip Flotante -->
+  <!-- EJERCICIO 12.1 -->
+  <h2 class="section-title">Ejercicio 12.1 - Tabla Interactiva</h2>
+  <table class="table tabla-cursos">
+    <thead class="table-primary">
+      <tr><th>Índice</th><th>Id</th><th>Título</th><th>Plazas</th><th>Instructor</th></tr>
+    </thead>
+    <tbody>
+      @for (course of courses; track course.id; let i = $index; let even = $even) {
+        <tr [class.fila-par]="even" [class.fila-impar]="!even"
+            [class.fila-seleccionada]="selectedCourse?.id === course.id"
+            (click)="selectCourse(course)">
+          <td (mouseenter)="onMouseEnter(course)" (mouseleave)="onMouseLeave()" class="tooltip-trigger">{{ i }}</td>
+          <td>{{ course.id }}</td><td>{{ course.title }}</td>
+          <td>{{ course.seatCapacity }}</td><td>{{ course.instructorName }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
   @if (hoveredCourse) {
     <div class="custom-tooltip">
-      <strong>{{ hoveredCourse.title }}</strong><br />
-      Plazas: {{ hoveredCourse.seatCapacity }}
+      <strong>{{ hoveredCourse.title }}</strong><br />Plazas: {{ hoveredCourse.seatCapacity }}
     </div>
   }
 
-  <!-- Inputs con ngModel para el curso seleccionado -->
   @if (selectedCourse) {
     <div class="mt-4 p-3 border rounded bg-light">
       <h3>Editar Curso Seleccionado</h3>
       <div class="mb-3">
-        <label class="form-label">Título (Entrada):</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="selectedCourse.title" 
-          placeholder="Título del curso"
-        />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Vista previa (Salida):</label>
-        <p class="form-control-plaintext fw-bold text-primary">{{ selectedCourse.title }}</p>
+        <label class="form-label">Título (Entrada/Salida):</label>
+        <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
       </div>
     </div>
   }
 
-  <!-- Ejercicio 12.2: Formulario Reactivo con Validaciones -->
-  <h2 class="mt-4">Ejercicio 12.2 - Formulario con Validaciones</h2>
-  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
-    
+  <!-- EJERCICIO 12.2 -->
+  <h2 class="section-title">Ejercicio 12.2 - Formulario con Validaciones</h2>
+  <form [formGroup]="courseForm12" (ngSubmit)="onSubmit12()" class="p-3 border rounded bg-light">
     <div class="mb-3">
-      <label for="title" class="form-label">Título del Curso</label>
-      <input 
-        type="text" 
-        id="title" 
-        class="form-control" 
-        formControlName="title"
-        [class.is-invalid]="attemptedSubmit && courseForm.get('title')?.invalid"
-      />
-      @if (attemptedSubmit && courseForm.get('title')?.invalid) {
-        <div class="invalid-feedback d-block">
-          @if (courseForm.get('title')?.errors?.['required']) {
-            <span>El título es obligatorio.</span>
-          }
-          @if (courseForm.get('title')?.errors?.['minlength']) {
-            <span>El título debe tener al menos 5 caracteres.</span>
-          }
-          @if (courseForm.get('title')?.errors?.['pattern']) {
-            <span>El título solo debe contener letras y espacios.</span>
-          }
-        </div>
+      <label for="title12" class="form-label">Título del Curso</label>
+      <input type="text" id="title12" class="form-control" formControlName="title"
+             [class.is-invalid]="attemptedSubmit12 && courseForm12.get('title')?.invalid" />
+      @if (attemptedSubmit12 && courseForm12.get('title')?.invalid) {
+        <div class="invalid-feedback d-block">El título es obligatorio, min 5 letras.</div>
       }
     </div>
-
     <div class="mb-3">
-      <label for="seatCapacity" class="form-label">Capacidad de Plazas</label>
-      <input 
-        type="text" 
-        id="seatCapacity" 
-        class="form-control" 
-        formControlName="seatCapacity"
-        [class.is-invalid]="attemptedSubmit && courseForm.get('seatCapacity')?.invalid"
-      />
-      @if (attemptedSubmit && courseForm.get('seatCapacity')?.invalid) {
-        <div class="invalid-feedback d-block">
-          @if (courseForm.get('seatCapacity')?.errors?.['required']) {
-            <span>La capacidad es obligatoria.</span>
-          }
-          @if (courseForm.get('seatCapacity')?.errors?.['pattern']) {
-            <span>La capacidad solo debe contener números.</span>
-          }
-        </div>
+      <label for="seat12" class="form-label">Capacidad de Plazas</label>
+      <input type="text" id="seat12" class="form-control" formControlName="seatCapacity"
+             [class.is-invalid]="attemptedSubmit12 && courseForm12.get('seatCapacity')?.invalid" />
+      @if (attemptedSubmit12 && courseForm12.get('seatCapacity')?.invalid) {
+        <div class="invalid-feedback d-block">Solo números obligatorios.</div>
       }
     </div>
-
-    <button 
-      type="submit" 
-      class="btn btn-primary" 
-      [disabled]="!courseForm.valid"
-    >
-      Create
-    </button>
-    <small class="text-muted ms-2">
-      (El botón se habilita automáticamente cuando todos los campos son válidos)
-    </small>
+    <button type="submit" class="btn btn-create" [disabled]="!courseForm12.valid">Create</button>
   </form>
+
+  <!-- EJERCICIO 13.1 -->
+  <h2 class="section-title">Ejercicio 13.1 - Directiva y Layout Dos Columnas</h2>
+  <div class="row g-4">
+    
+    <!-- a) Columna Izquierda: Formulario 13.1 -->
+    <div class="col-md-6">
+      <h3>Formulario de entrada</h3>
+      <form [formGroup]="courseForm13" (ngSubmit)="onSubmit13()" class="p-3 border rounded bg-light">
+        <div class="mb-3">
+          <label class="form-label">Course Title</label>
+          <input type="text" class="form-control" formControlName="title" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Seat Capacity</label>
+          <input type="text" class="form-control" formControlName="seatCapacity" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Instructor Name</label>
+          <input type="text" class="form-control" formControlName="instructorName" />
+        </div>
+        <button type="submit" class="btn btn-create" [disabled]="!courseForm13.valid">Create</button>
+      </form>
+    </div>
+
+    <!-- a) Columna Derecha: Tabla con Directiva -->
+    <div class="col-md-6">
+      <h3>Lista de cursos con Directiva</h3>
+      
+      <!-- h) Two-way binding sobre title del curso seleccionado -->
+      <div class="mb-3">
+        <label class="form-label">Editar título del curso seleccionado:</label>
+        @if (selectedCourse) {
+          <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
+        } @else {
+          <input type="text" class="form-control" placeholder="Selecciona un curso" disabled />
+        }
+      </div>
+
+      <table class="table table-bordered align-middle">
+        <thead class="table-primary">
+          <tr><th>Índice</th><th>Title</th><th>Seat Capacity</th><th>Instructor Name</th></tr>
+        </thead>
+        <tbody>
+          @for (course of courses; track course.id; let i = $index) {
+            <tr (click)="selectCourse(course)" style="cursor: pointer;">
+              <td>{{ i }}</td>
+              
+              <!-- c) Directiva base (bg-info, text-white) -->
+              <td appCuAttr>{{ course.title }}</td>
+              
+              <!-- g) Color dinámico por plazas (<15 verde, >=15 rojo) -->
+              <td appCuAttr [seatCapacity]="course.seatCapacity">{{ course.seatCapacity }}</td>
+              
+              <!-- d) Atributo extra bg-success sobre la directiva -->
+              <td appCuAttr bgSuccess="bg-success">{{ course.instructorName }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </div>
