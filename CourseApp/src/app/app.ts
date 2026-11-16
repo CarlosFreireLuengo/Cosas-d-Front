@@ -23,7 +23,7 @@ export class App {
 
   // Formulario Ejercicio 12.2 (Solo Title y Seat)
   courseForm12: FormGroup;
-  attemptedSubmit12 = false;
+  attemptedSubmit12 = true;
 
   // Formulario Ejercicio 13.1 (Title, Seat e Instructor)
   courseForm13: FormGroup;
