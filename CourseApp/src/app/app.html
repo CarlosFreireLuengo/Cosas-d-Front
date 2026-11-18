@@ -110,66 +110,46 @@
     <button type="submit" class="btn btn-create" [disabled]="!courseForm12.valid">Create</button>
   </form>
 
-  <!-- EJERCICIO 13.1 -->
-  <h2 class="section-title">Ejercicio 13.1 - Directiva y Layout Dos Columnas</h2>
-  <div class="row g-4">
+  <!-- EJERCICIO 15.1 -->
+<h2 class="section-title">Ejercicio 15.1 - Componentes Hijos y Proyección</h2>
+<div class="row g-4">
+  
+  <!-- a) Columna Izquierda: Formulario Hijo -->
+  <div class="col-md-6">
+    <app-course-form (courseCreated)="onCourseCreatedFromChild($event)"></app-course-form>
     
-    <!-- a) Columna Izquierda: Formulario 13.1 -->
-    <div class="col-md-6">
-      <h3>Formulario de entrada</h3>
-      <form [formGroup]="courseForm13" (ngSubmit)="onSubmit13()" class="p-3 border rounded bg-light">
-        <div class="mb-3">
-          <label class="form-label">Course Title</label>
-          <input type="text" class="form-control" formControlName="title" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Seat Capacity</label>
-          <input type="text" class="form-control" formControlName="seatCapacity" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Instructor Name</label>
-          <input type="text" class="form-control" formControlName="instructorName" />
-        </div>
-        <button type="submit" class="btn btn-create" [disabled]="!courseForm13.valid">Create</button>
-      </form>
-    </div>
-
-    <!-- a) Columna Derecha: Tabla con Directiva -->
-    <div class="col-md-6">
-      <h3>Lista de cursos con Directiva</h3>
-      
-      <!-- h) Two-way binding sobre title del curso seleccionado -->
-      <div class="mb-3">
+    <!-- Two-way binding del título seleccionado (mantenido del ej. 13.1h) -->
+    @if (selectedCourse) {
+      <div class="mt-3 p-3 border rounded bg-light">
         <label class="form-label">Editar título del curso seleccionado:</label>
-        @if (selectedCourse) {
-          <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
-        } @else {
-          <input type="text" class="form-control" placeholder="Selecciona un curso" disabled />
-        }
+        <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
       </div>
+    }
+  </div>
 
-      <table class="table table-bordered align-middle">
-        <thead class="table-primary">
-          <tr><th>Índice</th><th>Title</th><th>Seat Capacity</th><th>Instructor Name</th></tr>
-        </thead>
-        <tbody>
-          @for (course of courses; track course.id; let i = $index) {
-            <tr (click)="selectCourse(course)" style="cursor: pointer;">
-              <td>{{ i }}</td>
-              
-              <!-- c) Directiva base (bg-info, text-white) -->
-              <td appCuAttr>{{ course.title }}</td>
-              
-              <!-- g) Color dinámico por plazas (<15 verde, >=15 rojo) -->
-              <td appCuAttr [seatCapacity]="course.seatCapacity">{{ course.seatCapacity }}</td>
-              
-              <!-- d) Atributo extra bg-success sobre la directiva -->
-              <td appCuAttr bgSuccess="bg-success">{{ course.instructorName }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <!-- a) Columna Derecha: Tabla Hija con control de visibilidad -->
+  <div class="col-md-6">
+    
+    <!-- k) Checkbox para mostrar/ocultar tabla (AHORA EN EL PADRE) -->
+    <div class="form-check mb-3">
+      <input 
+        class="form-check-input" 
+        type="checkbox" 
+        id="showTableCheck" 
+        [(ngModel)]="showTable"
+      />
+      <label class="form-check-label" for="showTableCheck">
+        Mostrar tabla de cursos
+      </label>
     </div>
 
+    <!-- La tabla solo se renderiza si showTable es true -->
+    @if (showTable) {
+      <app-course-table 
+        [courses]="courses" 
+        (courseSelected)="onCourseSelectedFromChild($event)">
+      </app-course-table>
+    }
   </div>
+</div>
 </div>

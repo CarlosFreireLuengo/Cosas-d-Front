@@ -1,0 +1,30 @@
+<table class="table table-bordered align-middle">
+  <thead class="table-primary">
+    <tr>
+      <th>Índice</th>
+      <th>Title</th>
+      <th>Seat Capacity</th>
+      <th>Instructor Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (course of courses; track course.id; let i = $index) {
+      <tr 
+        (click)="onSelect(course)" 
+        style="cursor: pointer;"
+        [class.fila-seleccionada]="selectedCourse?.id === course.id"
+      >
+        <td>{{ i }}</td>
+        
+        <!-- c) Directiva base (bg-info, text-white) -->
+        <td appCuAttr>{{ course.title }}</td>
+        
+        <!-- g) Color dinámico por plazas (<15 verde, >=15 rojo) -->
+        <td appCuAttr [seatCapacity]="course.seatCapacity">{{ course.seatCapacity }}</td>
+        
+        <!-- d) Atributo extra bg-success sobre la directiva -->
+        <td appCuAttr bgSuccess="bg-success">{{ course.instructorName }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
