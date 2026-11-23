@@ -1,3 +1,17 @@
+<!-- Control de descuento enlazado al servicio (Ejercicio 17.1) -->
+<div class="mb-3 d-flex align-items-center gap-2">
+  <label for="discountInput17" class="form-label mb-0">Descuento (%):</label>
+  <input
+    id="discountInput17"
+    type="number"
+    min="0"
+    max="100"
+    class="form-control w-auto"
+    [ngModel]="discountValue"
+    (ngModelChange)="onDiscountChange($event)"
+  />
+</div>
+
 <table class="table table-bordered align-middle">
   <thead class="table-primary">
     <tr>
@@ -5,6 +19,8 @@
       <th>Title</th>
       <th>Seat Capacity</th>
       <th>Instructor Name</th>
+      <th>Price</th>
+      <th>Descuento</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +40,18 @@
         
         <!-- d) Atributo extra bg-success sobre la directiva -->
         <td appCuAttr bgSuccess="bg-success">{{ course.instructorName }}</td>
+
+        <!-- Ejercicio 17.1: Pipe que aplica el servicio a Price -->
+        <td>
+          <span>{{ course.price | currency:'EUR' }}</span>
+          @if (discountValue > 0) {
+            <br />
+            <strong>{{ (course.price | discountedPrice: discountValue) | currency:'EUR' }}</strong>
+          }
+        </td>
+
+        <!-- Ejercicio 17.1: Columna Descuento con directiva + servicio enlazada al input -->
+        <td [appDiscountColumn]="discountValue"></td>
       </tr>
     }
   </tbody>
