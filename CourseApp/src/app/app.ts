@@ -1,18 +1,25 @@
 import { Component, inject } from '@angular/core';
+import { PercentPipe, UpperCasePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CourseRepository } from './repositories/course.repository';
 import { Course } from './models/course';
 import { CourseTableComponent } from './components/course-table/course-table';
 import { CourseFormComponent } from './components/course-form/course-form';
+import { RatioAsientosPipe } from './pipes/ratio-asientos-pipe';
+import { FiltrarInstructorPipe } from './pipes/filtrar-instructor-pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    FormsModule, 
-    ReactiveFormsModule, 
+    FormsModule,
+    ReactiveFormsModule,
+    PercentPipe,
+    UpperCasePipe,
     CourseTableComponent,
-    CourseFormComponent
+    CourseFormComponent,
+    RatioAsientosPipe,
+    FiltrarInstructorPipe
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -35,6 +42,18 @@ export class App {
   courseForm13: FormGroup;
 
   showTable: boolean = true; // Para el checkbox del apartado k
+
+  // Estado Ejercicio 16.1 (Pipes)
+  selectedRatio16: number = 0;
+  selectedInstructor16: string = 'ALL';
+  ratios16: number[] = [0, 0.1, 0.2, 0.5];
+
+  get instructors16(): string[] {
+    const names = this.courses
+      .map(c => (c.instructorName ?? '').trim())
+      .filter(name => name.length > 0);
+    return Array.from(new Set(names));
+  }
 
   constructor() {
     // Validaciones Estrictas del 12.2 (INTACTAS)

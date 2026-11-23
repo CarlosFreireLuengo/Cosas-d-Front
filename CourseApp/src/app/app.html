@@ -111,45 +111,97 @@
   </form>
 
   <!-- EJERCICIO 15.1 -->
-<h2 class="section-title">Ejercicio 15.1 - Componentes Hijos y Proyección</h2>
-<div class="row g-4">
-  
-  <!-- a) Columna Izquierda: Formulario Hijo -->
-  <div class="col-md-6">
-    <app-course-form (courseCreated)="onCourseCreatedFromChild($event)"></app-course-form>
+  <h2 class="section-title">Ejercicio 15.1 - Componentes Hijos y Proyección</h2>
+  <div class="row g-4">
     
-    <!-- Two-way binding del título seleccionado (mantenido del ej. 13.1h) -->
-    @if (selectedCourse) {
-      <div class="mt-3 p-3 border rounded bg-light">
-        <label class="form-label">Editar título del curso seleccionado:</label>
-        <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
-      </div>
-    }
-  </div>
-
-  <!-- a) Columna Derecha: Tabla Hija con control de visibilidad -->
-  <div class="col-md-6">
-    
-    <!-- k) Checkbox para mostrar/ocultar tabla (AHORA EN EL PADRE) -->
-    <div class="form-check mb-3">
-      <input 
-        class="form-check-input" 
-        type="checkbox" 
-        id="showTableCheck" 
-        [(ngModel)]="showTable"
-      />
-      <label class="form-check-label" for="showTableCheck">
-        Mostrar tabla de cursos
-      </label>
+    <!-- a) Columna Izquierda: Formulario Hijo -->
+    <div class="col-md-6">
+      <app-course-form (courseCreated)="onCourseCreatedFromChild($event)"></app-course-form>
+      
+      <!-- Two-way binding del título seleccionado (mantenido del ej. 13.1h) -->
+      @if (selectedCourse) {
+        <div class="mt-3 p-3 border rounded bg-light">
+          <label class="form-label">Editar título del curso seleccionado:</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedCourse.title" />
+        </div>
+      }
     </div>
 
-    <!-- La tabla solo se renderiza si showTable es true -->
-    @if (showTable) {
-      <app-course-table 
-        [courses]="courses" 
-        (courseSelected)="onCourseSelectedFromChild($event)">
-      </app-course-table>
-    }
+    <!-- a) Columna Derecha: Tabla Hija con control de visibilidad -->
+    <div class="col-md-6">
+      
+      <!-- k) Checkbox para mostrar/ocultar tabla (AHORA EN EL PADRE) -->
+      <div class="form-check mb-3">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          id="showTableCheck" 
+          [(ngModel)]="showTable"
+        />
+        <label class="form-check-label" for="showTableCheck">
+          Mostrar tabla de cursos
+        </label>
+      </div>
+
+      <!-- La tabla solo se renderiza si showTable es true -->
+      @if (showTable) {
+        <app-course-table 
+          [courses]="courses" 
+          (courseSelected)="onCourseSelectedFromChild($event)">
+        </app-course-table>
+      }
+    </div>
   </div>
-</div>
+
+  <!-- EJERCICIO 16.1 - PIPES -->
+  <h2 class="section-title">Ejercicio 16.1 - Pipes</h2>
+  <div class="p-3 border rounded bg-light mb-4">
+    <div class="row g-3 mb-3">
+      <!-- Desplegable para filtrar cursos por nombre de instructor (Pipe impura + uppercase) -->
+      <div class="col-md-6">
+        <label for="instructorSelect16" class="form-label">Filtrar por instructor:</label>
+        <select id="instructorSelect16" class="form-select" [(ngModel)]="selectedInstructor16">
+          <option value="ALL">Todos</option>
+          @for (inst of instructors16; track inst) {
+            <option [value]="inst">{{ inst | uppercase }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Desplegable con ratios usando la pipe autoimplementada 'percent' -->
+      <div class="col-md-6">
+        <label for="ratioSelect16" class="form-label">Ratio de asientos reservados:</label>
+        <select id="ratioSelect16" class="form-select" [(ngModel)]="selectedRatio16">
+          @for (ratio of ratios16; track ratio) {
+            <option [ngValue]="ratio">
+              {{ ratio === 0 ? 'None' : (ratio | percent) }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <table class="table tabla-cursos mb-0">
+      <thead class="table-primary">
+        <tr>
+          <th>Título</th>
+          <th>Instructor</th>
+          <th>Plazas totales</th>
+          <th>Ratio ({{ selectedRatio16 === 0 ? 'None' : (selectedRatio16 | percent) }})</th>
+          <th>Asientos reservados</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (course of (courses | filtrarInstructor: selectedInstructor16); track course.id) {
+          <tr>
+            <td>{{ course.title }}</td>
+            <td>{{ course.instructorName | uppercase }}</td>
+            <td>{{ course.seatCapacity }}</td>
+            <td>{{ selectedRatio16 | percent }}</td>
+            <td><strong>{{ course.seatCapacity | ratioAsientos: selectedRatio16 }}</strong></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
