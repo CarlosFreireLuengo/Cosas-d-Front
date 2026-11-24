@@ -1,116 +1,115 @@
-<div style="padding: 20px; font-family: Arial, sans-serif;">
-  <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
-    <!-- Columna izquierda: Tabla + botón Create New Course -->
-    <div style="flex: 2; min-width: 520px;">
-      <table style="width: 100%; border-collapse: collapse;">
+<div class="container-fluid mt-3">
+  <div class="row">
+
+    <!-- COLUMNA IZQUIERDA: Tabla de Cursos -->
+    <div class="col-md-8">
+      <table class="table table-sm table-bordered table-striped">
         <thead>
-          <tr style="border-bottom: 2px solid #dee2e6; text-align: left;">
-            <th style="padding: 8px;">ID</th>
-            <th style="padding: 8px;">Title</th>
-            <th style="padding: 8px;">Seat Capacity</th>
-            <th style="padding: 8px;">Price</th>
-            <th style="padding: 8px;">Instructor Name</th>
-            <th style="padding: 8px;"></th>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Seat Capacity</th>
+            <th>Price</th>
+            <th>Instructor Name</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          @for (course of courses; track course.id) {
-            <tr style="border-bottom: 1px solid #e9ecef;">
-              <td style="padding: 8px;">{{ course.id }}</td>
-              <td style="padding: 8px;">{{ course.title }}</td>
-              <td style="padding: 8px;">{{ course.seatCapacity }}</td>
-              <td style="padding: 8px;">${{ course.price }}</td>
-              <td style="padding: 8px;">{{ course.instructorName }}</td>
-              <td style="padding: 8px; white-space: nowrap;">
-                <button
-                  type="button"
-                  (click)="deleteCourse(course.id)"
-                  style="background-color: #dc3545; color: #fff; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; margin-right: 4px;">
-                  Delete
-                </button>
-                <button
-                  type="button"
-                  (click)="startEdit(course)"
-                  style="background-color: #ffc107; color: #212529; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer;">
-                  Edit
-                </button>
-              </td>
-            </tr>
-          }
+          <tr *ngFor="let item of courses">
+            <td>{{ item.id }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.seatCapacity }}</td>
+            <td>{{ item.price | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td>{{ item.instructorName }}</td>
+            <td class="text-center">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm me-1"
+                (click)="deleteCourse(item.id)">
+                Delete
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning btn-sm"
+                (click)="startEdit(item)">
+                Edit
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
 
-      <div style="margin-top: 14px;">
-        <button
-          type="button"
-          (click)="startCreate()"
-          style="background-color: #0d6efd; color: #fff; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer;">
-          Create New Course
-        </button>
-      </div>
+      <button
+        type="button"
+        class="btn btn-primary btn-sm mt-2"
+        (click)="startCreate()">
+        Create New Course
+      </button>
     </div>
 
-    <!-- Columna derecha: Formulario Edit Course -->
-    @if (editingCourse) {
-      <div style="flex: 1; min-width: 280px; border: 1px solid #dee2e6; border-radius: 4px; overflow: hidden;">
-        <div style="background-color: #ffc107; color: #fff; padding: 10px 14px; font-weight: bold;">
-          {{ isNewCourse ? 'New Course' : 'Edit Course' }}
-        </div>
-
-        <div style="padding: 14px;">
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 13px; color: #6c757d; margin-bottom: 4px;">Title</label>
-            <input
-              type="text"
-              [value]="editingCourse.title"
-              (input)="editingCourse.title = $any($event.target).value"
-              style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 3px; box-sizing: border-box;" />
-          </div>
-
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 13px; color: #6c757d; margin-bottom: 4px;">Seat Capacity</label>
-            <input
-              type="number"
-              [value]="editingCourse.seatCapacity"
-              (input)="editingCourse.seatCapacity = $any($event.target).valueAsNumber"
-              style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 3px; box-sizing: border-box;" />
-          </div>
-
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 13px; color: #6c757d; margin-bottom: 4px;">Price</label>
-            <input
-              type="number"
-              step="0.01"
-              [value]="editingCourse.price"
-              (input)="editingCourse.price = $any($event.target).valueAsNumber"
-              style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 3px; box-sizing: border-box;" />
-          </div>
-
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-size: 13px; color: #6c757d; margin-bottom: 4px;">Instructor Name</label>
-            <input
-              type="text"
-              [value]="editingCourse.instructorName"
-              (input)="editingCourse.instructorName = $any($event.target).value"
-              style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 3px; box-sizing: border-box;" />
-          </div>
-
-          <div style="display: flex; gap: 8px;">
-            <button
-              type="button"
-              (click)="saveCourse()"
-              style="background-color: #ffc107; color: #fff; border: none; padding: 6px 14px; border-radius: 3px; cursor: pointer;">
-              Save
-            </button>
-            <button
-              type="button"
-              (click)="cancelEdit()"
-              style="background-color: #6c757d; color: #fff; border: none; padding: 6px 14px; border-radius: 3px; cursor: pointer;">
-              Cancel
-            </button>
-          </div>
-        </div>
+    <!-- COLUMNA DERECHA: Formulario de Edición / Creación -->
+    <div class="col-md-4">
+      <div class="bg-warning text-white p-2 mb-3 fw-bold">
+        {{ isNewCourse ? 'Create Course' : 'Edit Course' }}
       </div>
-    }
+
+      <form *ngIf="editingCourse" (ngSubmit)="saveCourse()">
+        <div class="mb-2">
+          <label class="form-label mb-1">Title</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="title"
+            [(ngModel)]="editingCourse.title"
+            required
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label mb-1">Seat Capacity</label>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            name="seatCapacity"
+            [(ngModel)]="editingCourse.seatCapacity"
+            required
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label mb-1">Price</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control form-control-sm"
+            name="price"
+            [(ngModel)]="editingCourse.price"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label mb-1">Instructor Name</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="instructorName"
+            [(ngModel)]="editingCourse.instructorName"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-warning text-white btn-sm me-1">
+          Save
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="cancelEdit()">
+          Cancel
+        </button>
+      </form>
+    </div>
+
   </div>
 </div>
