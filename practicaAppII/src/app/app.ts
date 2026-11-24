@@ -30,9 +30,10 @@ export class AppComponent {
 
   saveCourse(): void {
     if (this.editingCourse) {
-      this.courseService.saveCourse(this.editingCourse);
-      this.editingCourse = null;
-      this.isNewCourse = false;
+      if (this.courseService.saveCourse(this.editingCourse)) {
+        this.editingCourse = null;
+        this.isNewCourse = false;
+      }
     }
   }
 

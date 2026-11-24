@@ -4,6 +4,7 @@ import { Message } from './message.model';
 
 @Component({
   selector: 'app-message',
+  standalone: false,
   template: `
     @if (lastMessage) {
       <div [style.padding]="'8px 12px'"

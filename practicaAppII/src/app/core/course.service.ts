@@ -17,12 +17,12 @@ export class CourseService {
     return this.courses.find(c => c.id === id);
   }
 
-  saveCourse(course: Course): void {
+  saveCourse(course: Course): boolean {
     if (!course.title || !course.instructorName) {
       this.messageService.reportMessage(
         new Message('Title and Instructor Name are required.', true)
       );
-      return;
+      return false;
     }
 
     if (course.id == null) {
@@ -38,6 +38,7 @@ export class CourseService {
       );
       this.courses.push(newCourse);
       this.messageService.reportMessage(new Message(`Course "${newCourse.title}" created.`));
+      return true;
     } else {
       const idx = this.courses.findIndex(c => c.id === course.id);
       if (idx >= 0) {
@@ -49,8 +50,11 @@ export class CourseService {
           course.instructorName
         );
         this.messageService.reportMessage(new Message(`Course "${course.title}" updated.`));
+        return true;
       }
     }
+
+    return false;
   }
 
   deleteCourse(id: number): void {
