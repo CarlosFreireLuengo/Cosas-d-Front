@@ -1,0 +1,158 @@
+<div class="evento-wrapper">
+  <div class="evento-card">
+    <header class="evento-header">
+      <h1>Registro de evento</h1>
+      <p>Completa los datos del evento y añade al menos 2 invitados.</p>
+    </header>
+
+    <form [formGroup]="eventoForm" (ngSubmit)="onSubmit()">
+      <fieldset class="seccion-form" formGroupName="infoEvento">
+        <legend>Información del evento</legend>
+
+        <div class="campo">
+          <label for="nombreEvento">Nombre del evento *</label>
+          <input
+            id="nombreEvento"
+            type="text"
+            formControlName="nombreEvento"
+            placeholder="Ej. Hackathon Tajamar"
+          />
+          @if (esInvalido(infoEvento.get('nombreEvento'))) {
+            @if (infoEvento.get('nombreEvento')?.hasError('required')) {
+              <small class="error-msg">El nombre del evento es obligatorio.</small>
+            }
+            @if (infoEvento.get('nombreEvento')?.hasError('minlength')) {
+              <small class="error-msg">Debe tener al menos 5 caracteres.</small>
+            }
+          }
+        </div>
+
+        <div class="campo">
+          <label for="fechaEvento">Fecha del evento *</label>
+          <input id="fechaEvento" type="date" formControlName="fechaEvento" />
+          @if (esInvalido(infoEvento.get('fechaEvento'))) {
+            @if (infoEvento.get('fechaEvento')?.hasError('required')) {
+              <small class="error-msg">La fecha es obligatoria.</small>
+            }
+            @if (infoEvento.get('fechaEvento')?.hasError('fechaNoFutura')) {
+              <small class="error-msg">La fecha debe ser futura (posterior a hoy).</small>
+            }
+          }
+        </div>
+
+        <div class="campo">
+          <label for="ubicacion">Ubicación *</label>
+          <input
+            id="ubicacion"
+            type="text"
+            formControlName="ubicacion"
+            placeholder="Ej. Calle de Pío Felipe, 12, Madrid"
+          />
+          @if (esInvalido(infoEvento.get('ubicacion'))) {
+            @if (infoEvento.get('ubicacion')?.hasError('required')) {
+              <small class="error-msg">La ubicación es obligatoria.</small>
+            }
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="seccion-form" formArrayName="invitados">
+        <legend>Lista de invitados</legend>
+
+        <div class="invitados-toolbar">
+          <button type="button" class="btn-agregar" (click)="agregarInvitado()">
+            + Agregar invitado
+          </button>
+          <span class="contador-invitados">
+            {{ invitados.length }} {{ invitados.length === 1 ? 'invitado' : 'invitados' }}
+          </span>
+        </div>
+
+        @if (invitados.length < 2 && (invitados.touched || invitados.dirty)) {
+          <div class="error-banner">
+            Debes agregar al menos 2 invitados antes de enviar.
+          </div>
+        }
+
+        @for (invitado of invitados.controls; track $index) {
+          <div class="invitado-card" [formGroupName]="$index">
+            <div class="invitado-header">
+              <h4>Invitado #{{ $index + 1 }}</h4>
+              <button type="button" class="btn-eliminar" (click)="eliminarInvitado($index)">
+                Eliminar invitado
+              </button>
+            </div>
+
+            <div class="invitado-grid">
+              <div class="campo">
+                <label [for]="'nombre-' + $index">Nombre *</label>
+                <input
+                  [id]="'nombre-' + $index"
+                  type="text"
+                  formControlName="nombre"
+                  placeholder="Nombre completo"
+                />
+                @if (esInvalido(invitado.get('nombre'))) {
+                  @if (invitado.get('nombre')?.hasError('required')) {
+                    <small class="error-msg">El nombre del invitado es obligatorio.</small>
+                  }
+                }
+              </div>
+
+              <div class="campo">
+                <label [for]="'email-' + $index">Correo electrónico *</label>
+                <input
+                  [id]="'email-' + $index"
+                  type="email"
+                  formControlName="email"
+                  placeholder="correo@ejemplo.com"
+                />
+                @if (esInvalido(invitado.get('email'))) {
+                  @if (invitado.get('email')?.hasError('required')) {
+                    <small class="error-msg">El correo electrónico es obligatorio.</small>
+                  }
+                  @if (invitado.get('email')?.hasError('email')) {
+                    <small class="error-msg">Introduce un correo electrónico válido.</small>
+                  }
+                }
+              </div>
+
+              <div class="campo">
+                <label [for]="'edad-' + $index">Edad (opcional)</label>
+                <input
+                  [id]="'edad-' + $index"
+                  type="number"
+                  min="1"
+                  formControlName="edad"
+                  placeholder="Ej. 22"
+                />
+                @if (esInvalido(invitado.get('edad'))) {
+                  @if (invitado.get('edad')?.hasError('edadInvalida')) {
+                    <small class="error-msg">La edad debe ser un número mayor a 0.</small>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </fieldset>
+
+      <div class="acciones-finales">
+        <button
+          type="submit"
+          class="btn-enviar"
+          [disabled]="eventoForm.invalid || invitados.length < 2"
+        >
+          Enviar
+        </button>
+      </div>
+    </form>
+
+    @if (datosEnviados) {
+      <section class="resultado-card">
+        <h3>Evento registrado con éxito</h3>
+        <pre>{{ datosEnviados | json }}</pre>
+      </section>
+    }
+  </div>
+</div>
